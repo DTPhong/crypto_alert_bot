@@ -4,6 +4,7 @@ from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext, JobQueue
 import os
 from flask import Flask
+from threading import Timer
 
 # Token API từ BotFather
 TELEGRAM_API_TOKEN = '7380740799:AAG0XNobq3aKbzArXumKQvjhmbW7NRhKtgo'
@@ -97,6 +98,19 @@ def main():
     port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port)
 
+def keep_alive():
+    try:
+        # Thay URL bên dưới bằng URL của ứng dụng của bạn
+        url = "https://your-app-on-render.com"
+        response = requests.get(url)
+        print(f"Keep-alive request sent: {response.status_code}")
+    except Exception as e:
+        print(f"Error sending keep-alive request: {e}")
+
+    # Gọi lại hàm keep_alive sau mỗi 10 phút (600 giây)
+    Timer(600, keep_alive).start()
+
 if __name__ == '__main__':
     main()
+    keep_alive()
 
