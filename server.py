@@ -2,9 +2,17 @@ import requests
 import pandas as pd
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext, JobQueue
+import os
+from flask import Flask
 
 # Token API từ BotFather
 TELEGRAM_API_TOKEN = '7380740799:AAG0XNobq3aKbzArXumKQvjhmbW7NRhKtgo'
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return 'Bot is running'
 
 # Hàm lấy giá Bitcoin từ CoinGecko API
 def get_crypto_price():
@@ -85,7 +93,9 @@ def main():
     dp.add_handler(CommandHandler('start', start, pass_job_queue=True))
 
     updater.start_polling()
-    updater.idle()
+    # updater.idle()
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port)
 
 if __name__ == '__main__':
     main()
